@@ -115,6 +115,13 @@ ul.posts {
     color: #aaa;
   }
 
+  .info {
+    font-weight: normal;
+    font-size: 12px;
+    color: #666;
+    overflow: hidden;
+  }
+
   .site .footer {
     font-size: 80%;
     color: #666;
