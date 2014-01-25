@@ -1,7 +1,7 @@
 ---
 layout: page
-title: Hello World!
-tagline: Supporting tagline
+title: Ignasi Garcia Font
+tagline: Lead developer at IPC Media, HTML5 games enthusiast, loves skateboarding.
 ---
 {% include JB/setup %}
 
