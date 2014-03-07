@@ -1,0 +1,337 @@
+﻿<!--
+	@author Marcin Wawrzyniak (mailo)
+	@since 19-05-2012 
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TR Performance Optimizations</title>
+    <meta charset='utf-8'>
+    <script src='./slides.js'></script>
+    <style media="print">
+        @page {
+            size: A4 landscape;
+            @top-right {
+                content: "Page " counter(page);
+            }
+        }
+
+        article {
+            page-break-after: always;
+            margin: auto;
+        }
+
+        article.next, article.past {
+            display: block;
+        }
+
+        body {
+            display: block !important;
+            font-family: 'Open Sans', Arial, sans-serif;
+            font-size: 1.5em;
+        }
+
+        .article {
+            page-brake-before: always;
+        }
+    </style>
+    <script type="text/javascript">
+        window.addEventListener('load', function () {
+            var link = document.getElementsByTagName('link');
+            link[link.length - 1].setAttribute("media", "screen");
+        });
+    </script>
+</head>
+<style>
+    .slides.template-default > article:not(.nobackground):not(.biglogo) {
+        background-image: none !important;
+    }
+
+    .number {
+        width: 300px;
+        text-align: right;
+        font-size: 20px !important;
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .logo {
+        width: 147px;
+        height: 64px;
+        background-image: url("./images/tr.png");
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+    }
+
+    .ignacio {
+        color: red;
+    }
+
+    .marcin {
+        color: blue;
+    }
+</style>
+<body style='display: none'>
+<section class='slides layout-regular template-default'>
+<article>
+    <h1>
+        <img src="./images/tr.png"/>
+        <br/>
+    </h1>
+
+    <p>
+        Performance optimisation story
+    </p>
+
+    <p style="font-size:16px;text-align:right;margin-top:280px;"><b>with Marcin Wawrzyniak and Ignacio Garcia</b></p>
+    <p class="number ignacio">1</p>
+</article>
+
+<article>
+
+    <h3>Quick roadmap</h3>
+    <ol>
+        <li> The problem
+        <li> The opportunity
+        <li> Solutions
+        <li> Future improvements
+    </ol>
+    <p class="number ignacio">2 / 21</p>
+</article>
+
+<article class="smaller">
+    <h3> The problem </h3>
+
+    <p>The problem is that when the page takes long to load,  <b>bounce rate</b> goes up and <b>user satisfaction drops</b>.</p>
+    <br/>
+    <center>
+        <p><img src="http://www.roaringtraffic.com/wp-content/uploads/2013/06/page-speed-abondonment-rate.jpeg"/></p>
+        <br/><br/>
+
+        <h3 class="red">First bits of TR showed up after 11 seconds</h3>
+    </center>
+    <p class="number marcin">3 / 21</p>
+</article>
+
+<article class="smaller">
+    <h3>The opportunity</h3>
+
+    <p>A redesign of the homepage had to be done, so I asked Ignacio if we could tune up things a little bit...</p> <br/>
+
+    <h3>he said...</h3> <br/>
+
+    <center><img src="http://media.giphy.com/media/QBjH0bEtlZheg/giphy.gif"></center>
+    <p class="number marcin">4 / 21</p>
+</article>
+
+<article class="smaller">
+    <img src="./images/nacho.jpg" width="800px"/>
+    <small><a style="font-size:12px;" href="http://www.imdb.com/title/tt0457510/">* Nacho Libre (2006) IMDB</a></small>
+    <p class="number marcin">5 / 21</p>
+</article>
+
+
+<article class="smaller">
+    <h3>Problem #1 Too much blocking assets on page load</h3>
+    <h4>We loaded a lot of stuff before user could see the page</h4>
+    <ul>
+        <li>
+        <li> Blocking (synchronous) JavaScript in head (inline or src)
+
+        <li> Blocking (synchronous) JavaScript in body, placed randomly (inline or src)
+        <li> YUI ?
+        <li> jQuery ?
+        <li>Analytics ?
+        <li>Optimizely ?
+        <li>IPC includes ?
+        <li>Facebook connect?
+        <li>Post.it ?
+    </ul>
+    <p>Everytime the tokenizer gets into the &lt;script&gt; tag (<i>without async or defer</i>), it stops
+        <b>everything</b>, fetches the resource and/or parses the script - then it continues.
+    </p>
+    <p class="number marcin">6 / 21</p>
+</article>
+
+
+<article class="smaller">
+    <h3>The solutions</h3>
+    <h4>Minify and concatenate assets to make less requests</h4>
+    <p>Using sfCombine Plugin and YUI Compressor</p>
+    <h4>We load less stuff before the user sees the page using <u>defer</u> and <u>async</u> attributes.</h4>
+
+    <p>
+    <ul>
+        <li><b>async</b> <a href="http://caniuse.com/#search=async">&gt;=IE9</a> - "A script that will be run
+            asynchronously as soon as it is available", without blocking DOM construction
+        <li><b>defer</b> <a href="http://caniuse.com/#search=defer">&gt;=IE8</a> - "A script that will not run until
+            after the page has loaded"
+    </ul>
+    </p>
+
+    <br/>
+    <center><img src="http://avc.name/wp-content/uploads/2012/04/script-defer-asyn.jpg"/></center>
+    <p class="number marcin">7 / 21</p>
+</article>
+
+
+<article class="smaller">
+    <h3>Other optimisations we did</h3>
+
+    <ul>
+        <li>We moved the rest of images to sprites = 5 requests saved
+        <li>Combined almost every CSS stylesheet we had = 3 requests saved
+        <li>We removed the CSS for print, in two places = 2 requests
+        <li>Removed duplicated scripts (facebook...) - are you sure you don't have any ? = 1x304 (Not Modified) saved
+        <li><b>Used trViewKit::jsSlot() -&gt; moved all inline blocking JS to before body end - <i>probably</i>
+            big impact</b>
+        <li>And of course, we made use of async, in three places, wow.
+    </ul>
+    <center><img src="http://i.imgur.com/S25EO.gif"></center>
+    <p class="number marcin">8 / 21</p>
+</article>
+
+<article class="smaller">
+    <h3>Results</h3>
+    <h4>Around 5 seconds of improvement</h4>
+    <img style="width: 750px;" src="images/new-relic.png"/>
+    <p class="number marcin">9 / 21</p>
+</article>
+
+
+<article class="smaller">
+    <h3>Problem #2 Complex DOM and huge CSS files</h3>
+    <h4>Using tools like <u>Dom Monster</u> and the <u>Firefox 3D preview</u> we could identify pages with complex markup and with too much nested levels</h4>
+    <center><img src="images/dom-monster.png" width="750px"/></center>
+    <p class="number">10 / 21</p>
+</article>
+
+<article class="smaller">
+    <h3>Firefox 3D view</h3>
+    <p style="font-weight: bold;">Yeah, Firefox can do that...</p><br/>
+    <center><img src="http://i.imgur.com/cDkcOsw.png" width="600px"></center>
+    <p>Doing a refresh of the site was a good excuse to make a lighter DOM</p>
+    <p class="number">11 / 21</p>
+</article>
+
+<article class="smaller">
+    <h3>Make a lighter CSS using <u>SASS</u></h3>
+    <p>We had a legacy CSS file that had rules for pretty much all sections of the site.</p>
+    <p>We started splitting things up in smaller CSS files, and section by section of the site. That means that these process could be done gradually.</p>
+    <p>We went from having a massive file with <u>1500</u> lines of CSS to one with <u>600</u> lines in it.</p>
+    <h4>The results were really good, and much more than we expected so the site became <u>1.5 seconds faster</u></h4>
+    <h4>...and also we had a much better organised CSS structure. Things were under control again.</h4>
+    <p class="number">12 / 21</p>
+</article>
+
+<article class="smaller">
+    <h3>You can also improve the speed of CSS rendering avoiding:</h3>
+    <h4>Ancestors like</h4>
+    <pre>
+        html div tr td {
+            ...some css
+        }
+    </pre>
+    <h4>Universal selectors like</h4>
+    <pre>
+         * {
+            ...some css
+         }
+    </pre>
+    <h4>Github has a great presentation about this. We will provide the links at the end.</h4>
+    <p class="number">13 / 21</p>
+</article>
+
+<article class="smaller">
+    <h3>Problem #3 Loading things that we don´t need...yet!</h3>
+    <h4>Disqus was loading on every content page, but it appears pretty much at the end of it.</h4>
+    <h4>So we didn't load it on page load, but we activate it once the user scrolls to a certain position.</h4>
+    <a href="http://www.trustedreviews.com/google-chromecast_Gadget_review">See it in action</a>
+    <p class="number">14 / 21</p>
+</article>
+
+<article class="smaller">
+    <h3>In plans: 1/3</h3>
+    <center><img style="margin:auto" src="http://i.imgur.com/iWXoE85.png" /></center>
+    <ul>
+        <!-- separate slide -->
+        <li>
+            Sharded CDN (cookie-less) domains
+            <ul>
+                <li>no cookie payload (8kB)
+                <li> more
+                    parallel connections
+                <li>we would like to serve JS and CSS from static domains yet
+            </ul>
+            <p class="number">15 / 21</p>
+</article>
+
+<article class="smaller">
+    <h3>In plans: 2/3</h3>
+    <p>We would like to try lazy loading of images on the lists (<a href="https://github.com/toddmotto/echo">Echo?</a>)</p>
+    <ul>
+        <li>Usually out of viewport
+        <li>37 requests to static.trustedreviews.com
+        <li>... these requests delay onload
+        <li>... we can also load image when user scrolls to it
+        <li>... but sharded CDN can be the optimal solution here.
+    </ul>
+    <center><img src="http://d1ac1bzf3lrf3c.cloudfront.net/static/cache/7f/32/7f324b4ef6bd620c129677238af45ccb.jpg" width="650px"></center>
+    <p class="number">16 / 21</p>
+</article>
+<article class="smaller">
+    <h3>In plans: 3/3</h3>
+    <ul>
+        <li>we would like to try localStorage, and keep there YUI and jquery, and large inline scripts (1kB+) - <a href="addyosmani.github.io/basket.js/">basket.js</a>
+    </ul>
+    <p class="number">17 / 21</p>
+</article>
+<article class="smaller">
+    <h3>Tips</h3>
+    <h4>AKAMAI</h4>
+    <p>
+        When you specify a vary header, other than: <b>Vary: Accept-Encoding</b> AKAMAI won't cache anything!
+    </p>
+    <h4>Other</h4>
+    <p>
+        <br>Use CSS instead of images if possible - buttons? arrows? shadows? borders? gradient? transparency? (<a href="http://css-shack.herokuapp.com/">CSS Shack - Photoshop for CSS</a>)<br>
+    </p>
+    <p class="number">18 / 21</p>
+</article>
+<article class="smaller">
+    <h3>The thing is...</h3>
+			<span style="font-size: 35px;">
+			<blockquote>"It doesn't matter how fast your website is as long as it is faster than the competition" </blockquote>
+			</span>
+    <center><img src="http://i.imgur.com/7s8APdU.gif"></center>
+    <p class="number">19 / 21</p>
+</article>
+<article class="smaller">
+    <h3>Must read</h3> <br >
+    <p>
+        <a href="http://www.smashingmagazine.com/2013/06/10/pinterest-paint-performance-case-study/">Gone In 60 Frames Per Second: A Pinterest Paint Performance Case Study</a> <br /><br />
+        <a href="http://cdn.oreillystatic.com/en/assets/1/event/99/Prioritize%20Your%20Critical%20CSS%20and%20Images%20To%20Make%20Your%20Site%20Fast%20Presentation.pdf">Prioritize Your Critical CSS and Images to render site fast</a><br /><br />
+        <a href="http://www.igvita.com/slides/2012/devtools-tips-and-tricks/#38">* DevTools Tips and Tricks</a><br /><br />
+        <a href="http://www.igvita.com/slides/2012/webperf-crash-course.pdf">* WebPerf Crash Course</a><br /><br />
+        <a href="http://addyosmani.com/blog/performance-optimisation-with-timeline-profiles/">Improving Web App Performance With the Chrome DevTools Timeline and Profiles</a><br /><br />
+        <a href="https://speakerdeck.com/jonrohan/githubs-css-performance">GitHub's CSS Performance</a><br /><br />
+    </p>
+    <p style="position:absolute;bottom:30px;left:65px;"><a style="color:orange;font-size:35px;" href="http://bit.do/trusted">http://bit.do/trusted</a></p>
+    <p>* If you don't have a lot of time, pick these two.</p>
+    <p class="number">20 / 21</p>
+</article>
+<article class="smaller">
+    <h4>Thanks and happy Valentine's day!</h4>
+    <br/><br/><br/>
+    <center><img src="images/kiss.png"></center>
+    <br/><br/>
+    <h4 style="float: right;">Questions and discussion...</h4>
+</article>
+
+
+</section>
+
+</body>
+</html>

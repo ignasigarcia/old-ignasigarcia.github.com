@@ -422,7 +422,7 @@ a.pagination-item:hover {
     width: 80px;
     float: left;
     position: absolute;
-    margin: -8px 0 0 -110px;
+    margin: -8px 0 0 -100px;
 }
 
 @media (max-width: 900px) {
@@ -433,4 +433,19 @@ a.pagination-item:hover {
 
 .footer {
     font-size: 0.85rem;
+}
+
+.light {
+  color: #c0c0c0;
+}
+
+.no-list {
+  list-style-type: none;
+  padding: 0 0 0 20px;
+}
+
+.no-list .small {
+  font-size: 75%;
+  font-weight: 400;
+  color: #c0c0c0;
 }
