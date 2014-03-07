@@ -1,27 +1,35 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 
-  {% include head.html %}
+{% include head.html %}
 
-  <body>
+<body>
 
-    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
-         content to avoid any CSS collisions with our real content. -->
-    <div class="wrap">
-      <div class="masthead">
-        <div class="container">
-
-          <h3 class="masthead-title">
+<div class="container content">
+    <div class="masthead">
+        <h3 class="masthead-title">
             <a href="/" title="Home">{{ site.title }}</a>
-            <small>{{ site.tagline }}</small>
-          </h3>
-        </div>
-      </div>
+        </h3>
+        <nav>
+            <small>
+                <a href="/about">About</a>&nbsp;&middot;
+                <a href="{{ site.github.repo }}">Github</a>&nbsp;&middot;
+                <a href="{{ site.author.url }}">@igarciafont</a>
+            </small>
+        </nav>
 
-      <div class="container content">
-        {{ content }}
-      </div>
     </div>
 
-  </body>
+    {{ content }}
+
+    <div class="footer">
+        <p>
+            <a href="{{ site.google_plus }}">Ignasi Garcia Font</a> - {{ site.time | date: '%Y' }}. Follow me on <a href="{{ site.author.url }}">Twitter</a> or check my projects at <a href="{{ site.github.repo }}">Github</a>.
+            <br>
+            Theme: <a href="https://github.com/poole/poole">Poole</a>
+        </p>
+    </div>
+</div>
+
+</body>
 </html>

@@ -2,29 +2,23 @@
 layout: page
 title: About
 ---
+-
+Hi, I am Ignasi.
 
-<p class="message">
-  Hey there! This page is included as an example. Feel free to customize it for your own use upon downloading. Carry on!
-</p>
+I work as a Lead Developer at IPC Media, a publishing company from London. I work for sites like <a href="http://www.trustedreviews.com">Trusted Reviews</a> and <a href="http://www.decanter.com">Decanter</a>. Before that I worked on <a href="http://www.segundamano.es">Segundamano.es</a>, the classified's leader in Spain, where I am from.
 
-In the novel, *The Strange Case of Dr. Jeykll and Mr. Hyde*, Mr. Poole is Dr. Jekyll's virtuous and loyal butler. Similarly, Poole is an upstanding and effective butler that helps you build Jekyll themes. It's made by [@mdo](https://twitter.com/mdo).
+-
 
-There are currently two themes built on Poole:
+I enjoy building things, and I am currently interested in creating games in HTML5 and backend applications in GO, so you will see more of this stuff in this blog. I have extensive experience in PHP and Javascript.
 
-* [Hyde](http://hyde.getpoole.com)
-* [Lanyon](http://lanyon.getpoole.com)
+-
 
-Learn more and contribute on [GitHub](https://github.com/poole).
+You can see more or contact me here:
 
-## Setup
+* <a href="{{ site.email }}">Email</a>
+* <a href="{{ site.author.url }}">Twitter</a>
+* <a href="{{ site.github.repo }}">Github</a>
+* <a href="{{ site.google_plus }}">Google+</a>
+* <a href="{{ site.linkedin }}">Linkedn</a>
 
-Some fun facts about the setup of this project include:
-
-* Built for [Jekyll](http://jekyllrb.com)
-* Developed on GitHub and hosted for free on [GitHub Pages](https://pages.github.com)
-* Coded with [Sublime Text 2](http://sublimetext.org), an amazing code editor
-* Designed and developed while listening to music like [Blood Bros Trilogy](https://soundcloud.com/maddecent/sets/blood-bros-series)
-
-Have questions or suggestions? Feel free to [open an issue on GitHub](https://github.com/poole/issues/new) or [ask me on Twitter](https://twitter.com/mdo).
-
-Thanks for reading!
+<hr>

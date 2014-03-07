@@ -8,6 +8,7 @@ permalink:        pretty
 # Setup
 title:            Ignasi Garcia Font
 tagline:          ''
+description:      'Personal site of Ignacio Garcia Font, a coder enthusiast, games lover and Quake player'
 url:              http://ignasigarcia.com
 
 author:
@@ -17,9 +18,13 @@ author:
 paginate:         1000
 
 # Custom vars
-version:          2.0.0
+version:          1.0.0
 
 github:
   repo:           https://github.com/ignasigarcia
 
 excerpt_separator: <!--more-->
+
+email: mailto:tasillo@gmail.com
+linkedin: https://www.linkedin.com/pub/ignacio-garcia/31/43b/3b
+google_plus: http://google.com/+IgnasiGarciaFont
