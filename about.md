@@ -5,7 +5,7 @@ title: About
 -
 Hi, I am Ignasi.
 
-I am currently working as a Lead Developer at IPC Media, a publishing company from London. I work for sites like <a href="http://www.trustedreviews.com">Trusted Reviews</a> and <a href="http://www.decanter.com">Decanter</a>. Before that, I worked on <a href="http://www.segundamano.es">Segundamano.es</a>, the classified's leader in Spain, where I am from.
+I am currently working as a Lead Developer at IPC Media, a publishing company from London. I work for sites like <a href="http://www.trustedreviews.com">Trusted Reviews</a> and <a href="http://www.decanter.com">Decanter</a>. Before that, I worked at <a href="http://www.segundamano.es">Segundamano.es</a>, the classified's leader in Spain, where I am from.
 
 -
 
